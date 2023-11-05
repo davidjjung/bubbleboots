@@ -1,0 +1,39 @@
+modLoader = "javafml"
+loaderVersion = "[32,)"
+issueTrackerURL = ""
+license = "MIT License"
+
+[[mods]]
+modId = "bubble_boots"
+version = "${file.jarVersion}"
+logoFile = "logo.png"
+itemIcon = "minecraft:dirt"
+configBackground = "minecraft:textures/block/dirt.png"
+authors = "DavigJ"
+credits = ""
+displayURL = ""
+displayName = "bubble_boots"
+description = '''
+    A mod that adds one armor item, made from oversized bubble wands.
+    '''
+
+[[dependencies.bubble_boots]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.2,1.19.3)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.bubble_boots]]
+modId = "forge"
+mandatory = true
+versionRange = "[43.3.5,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.bubble_boots]]
+modId = "blueprint"
+mandatory = true
+versionRange = "[6.2.0,)"
+ordering = "AFTER"
+side = "BOTH"
