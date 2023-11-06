@@ -1,20 +1,20 @@
 modLoader = "javafml"
 loaderVersion = "[32,)"
-issueTrackerURL = ""
+issueTrackerURL = "https://github.com/davidjjung/bubbleboots/issues"
 license = "MIT License"
 
 [[mods]]
 modId = "bubble_boots"
 version = "${file.jarVersion}"
 logoFile = "logo.png"
-itemIcon = "minecraft:dirt"
-configBackground = "minecraft:textures/block/dirt.png"
+itemIcon = "supplementaries:soap"
+configBackground = "supplementaries:textures/blocks/soap_block.png"
 authors = "DavigJ"
-credits = ""
+credits = "The Supplementaries team, MehVahdJukaar for helping on code, and manuelaurreaf for the bubbles sound."
 displayURL = ""
-displayName = "bubble_boots"
+displayName = "Bubble Boots"
 description = '''
-    A mod that adds one armor item, made from oversized bubble wands.
+    A Supplementaries add-on that adds one quirky armor item.
     '''
 
 [[dependencies.bubble_boots]]
@@ -27,7 +27,7 @@ side = "BOTH"
 [[dependencies.bubble_boots]]
 modId = "forge"
 mandatory = true
-versionRange = "[43.3.5,)"
+versionRange = "[43.3.0,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -35,5 +35,19 @@ side = "BOTH"
 modId = "blueprint"
 mandatory = true
 versionRange = "[6.2.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.bubble_boots]]
+modId = "moonlight"
+mandatory = true
+versionRange = "[1.19.2-2.3.4,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.bubble_boots]]
+modId = "supplementaries"
+mandatory = true
+versionRange = "[1.19.2-2.4.5,)"
 ordering = "AFTER"
 side = "BOTH"

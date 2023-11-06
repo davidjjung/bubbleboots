@@ -27,6 +27,7 @@ public class BBMod {
         bus.addListener(this::clientSetup);
         bus.addListener(this::dataSetup);
         context.registerConfig(ModConfig.Type.COMMON, BBConfig.COMMON_SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, BBConfig.CLIENT_SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

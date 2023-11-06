@@ -1,5 +1,8 @@
 package com.davigj.bubble_boots.common.item;
 
+import com.davigj.bubble_boots.core.BBConfig;
+import com.davigj.bubble_boots.core.registry.BBSounds;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -7,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -15,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 
 import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 
@@ -30,25 +33,38 @@ public class BubbleBootsItem extends ArmorItem {
         CompoundTag tag = stack.getOrCreateTag();
         int soapiness = tag.getInt(SOAPINESS);
         BlockPos bubblePos = player.blockPosition().below();
-        if (world.getBlockState(bubblePos).isAir() && soapiness > 0) {
-            if (!world.isClientSide) {
-                world.setBlockAndUpdate(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
-                if (player.tickCount % 2 == 0) {
-                    tag.putInt(SOAPINESS, soapiness - 1);
+        if (soapiness > 0) {
+            if (world.getBlockState(bubblePos).isAir()) {
+                if (!world.isClientSide) {
+                    world.setBlockAndUpdate(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
+                    if (player.tickCount % 2 == 0) {
+                        tag.putInt(SOAPINESS, soapiness - 1);
+                    }
                 }
+            } else if (BBConfig.COMMON.soapBlockRestoration.get() &&
+                    world.getBlockState(bubblePos).is(ModRegistry.SOAP_BLOCK.get()) && soapiness != MAX_SOAPINESS) {
+                world.playSound(player, player, ModSounds.BUBBLE_BLOW.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                this.setDefaultSoapiness(stack);
+            } else if (player.isInWaterRainOrBubble() && BBConfig.COMMON.bootCleaning.get()) {
+                tag.putInt(SOAPINESS, 0);
+                return;
             }
-        } else if (world.getBlockState(bubblePos).is(ModRegistry.SOAP_BLOCK.get()) && soapiness != MAX_SOAPINESS) {
-            world.playSound(player, player, ModSounds.BUBBLE_PLACE.get(), SoundSource.NEUTRAL, 1.0F, 3.0F);
-            this.setDefaultSoapiness(stack);
-        }
-        if ((player.tickCount % 12 == 0 && soapiness > 0) || (soapiness > 0 && soapiness < 15 && player.tickCount % 4 == 0)) {
-            Random rand = new Random();
-            double x = player.getX() - 0.5;
-            double y = player.getY();
-            double z = player.getZ() - 0.5;
-            double d3 = (float) x + rand.nextFloat();
-            double d6 = (float) z + rand.nextFloat();
-            world.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+            if (world.isClientSide && BBConfig.CLIENT.sudsyBoots.get() && (player.tickCount % 40 == 0 || soapiness < BBConfig.CLIENT.soapWarning.get() && player.tickCount % 4 == 0)) {
+                RandomSource rand = player.getRandom();
+                double x = player.getX() - 0.5;
+                double y = player.getY();
+                double z = player.getZ() - 0.5;
+                double d3 = (float) x + rand.nextFloat();
+                double d6 = (float) z + rand.nextFloat();
+                world.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+            }
+            if (soapiness == BBConfig.CLIENT.soapWarning.get()) {
+                world.playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
+                        SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+            if (BBConfig.COMMON.slipAndSlide.get()) {
+                ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(world, player.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), player);
+            }
         }
     }
 

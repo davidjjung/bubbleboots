@@ -1,0 +1,11 @@
+{
+  "item.bubble_boots.bubbles": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "bubble_boots:item/bubbles",
+        "stream": true
+      }
+    ]
+  }
+}
