@@ -6,6 +6,7 @@
         "name": "bubble_boots:item/bubbles",
         "stream": true
       }
-    ]
+    ],
+    "subtitle": "subtitles.bubble_boots.item.bubble_boots.bubbles"
   }
 }

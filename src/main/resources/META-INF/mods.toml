@@ -10,11 +10,11 @@ logoFile = "logo.png"
 itemIcon = "supplementaries:soap"
 configBackground = "supplementaries:textures/blocks/soap_block.png"
 authors = "DavigJ"
-credits = "The Supplementaries team, MehVahdJukaar for helping on code, and manuelaurreaf for the bubbles sound."
+credits = "Thanks to the Supplementaries team, MehVahdJukaar for helping on code, and manuelaurreaf for the bubbles sound."
 displayURL = ""
 displayName = "Bubble Boots"
 description = '''
-    A Supplementaries add-on that adds one quirky armor item.
+    A Supplementaries add-on that has one bubbly new item.
     '''
 
 [[dependencies.bubble_boots]]

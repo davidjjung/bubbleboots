@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -34,11 +35,18 @@ public class BubbleBootsItem extends ArmorItem {
         int soapiness = tag.getInt(SOAPINESS);
         BlockPos bubblePos = player.blockPosition().below();
         if (soapiness > 0) {
+            int tickCount = player.tickCount;
+            int soapWarning = BBConfig.CLIENT.soapWarning.get();
             if (world.getBlockState(bubblePos).isAir()) {
                 if (!world.isClientSide) {
                     world.setBlockAndUpdate(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
-                    if (player.tickCount % 2 == 0) {
+                    if (tickCount % 2 == 0) {
                         tag.putInt(SOAPINESS, soapiness - 1);
+                    }
+                } else {
+                    if (tickCount % 2 == 0 && soapiness == soapWarning) {
+                        world.playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
+                                SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
                 }
             } else if (BBConfig.COMMON.soapBlockRestoration.get() &&
@@ -49,7 +57,7 @@ public class BubbleBootsItem extends ArmorItem {
                 tag.putInt(SOAPINESS, 0);
                 return;
             }
-            if (world.isClientSide && BBConfig.CLIENT.sudsyBoots.get() && (player.tickCount % 40 == 0 || soapiness < BBConfig.CLIENT.soapWarning.get() && player.tickCount % 4 == 0)) {
+            if (world.isClientSide && BBConfig.CLIENT.sudsyBoots.get() && (tickCount % 40 == 0 || soapiness < soapWarning && tickCount % 4 == 0)) {
                 RandomSource rand = player.getRandom();
                 double x = player.getX() - 0.5;
                 double y = player.getY();
@@ -57,10 +65,6 @@ public class BubbleBootsItem extends ArmorItem {
                 double d3 = (float) x + rand.nextFloat();
                 double d6 = (float) z + rand.nextFloat();
                 world.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
-            }
-            if (soapiness == BBConfig.CLIENT.soapWarning.get()) {
-                world.playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
-                        SoundSource.PLAYERS, 1.0F, 1.0F);
             }
             if (BBConfig.COMMON.slipAndSlide.get()) {
                 ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(world, player.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), player);
@@ -88,11 +92,12 @@ public class BubbleBootsItem extends ArmorItem {
     }
 
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         int soapiness = stack.getOrCreateTag().getInt(SOAPINESS);
         if (soapiness != 0) {
             tooltip.add(Component.translatable("message.supplementaries.bubble_blower_tooltip", new Object[]{soapiness, MAX_SOAPINESS}));
         }
+        tooltip.add(Component.translatable("item.bubble_boots.bubble_boots_midair").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("item.bubble_boots.bubble_boots_effect").withStyle(ChatFormatting.BLUE));
     }
 
     public boolean isEnchantable(@NotNull ItemStack p_41456_) {

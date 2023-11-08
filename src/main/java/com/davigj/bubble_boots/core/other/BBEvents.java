@@ -2,10 +2,11 @@ package com.davigj.bubble_boots.core.other;
 
 import com.davigj.bubble_boots.common.item.BubbleBootsItem;
 import com.davigj.bubble_boots.core.BBConfig;
-import com.davigj.bubble_boots.core.BBMod;
+import com.davigj.bubble_boots.core.BubbleBootsMod;
 import com.davigj.bubble_boots.core.registry.BBItems;
 import com.davigj.bubble_boots.core.registry.BBSounds;
 import com.teamabnormals.blueprint.core.util.TradeUtil;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.common.Mod;
 import static com.davigj.bubble_boots.common.item.BubbleBootsItem.SOAPINESS;
 import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 
-@Mod.EventBusSubscriber(modid = BBMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = BubbleBootsMod.MOD_ID)
 public class BBEvents {
 
     @SubscribeEvent
@@ -77,18 +78,22 @@ public class BBEvents {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player) {
             return;
-        } else if (entity.tickCount % 20 == 0 && entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof BubbleBootsItem
-                && entity.level.isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
+        } else if (entity.tickCount % 20 == 0 && entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof BubbleBootsItem) {
             ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
             int soapiness = stack.getOrCreateTag().getInt(SOAPINESS);
-            if (soapiness > 0) {
-                RandomSource rand = entity.getRandom();
-                double x = entity.getX() - 0.5;
-                double y = entity.getY();
-                double z = entity.getZ() - 0.5;
-                double d3 = (float) x + rand.nextFloat();
-                double d6 = (float) z + rand.nextFloat();
-                entity.level.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+            if (entity.level.isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
+                if (soapiness > 0) {
+                    RandomSource rand = entity.getRandom();
+                    double x = entity.getX() - 0.5;
+                    double y = entity.getY();
+                    double z = entity.getZ() - 0.5;
+                    double d3 = (float) x + rand.nextFloat();
+                    double d6 = (float) z + rand.nextFloat();
+                    entity.level.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+                }
+            }
+            if (BBConfig.COMMON.slipAndSlide.get() && soapiness > 0) {
+                ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(entity.level, entity.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), entity);
             }
         }
     }

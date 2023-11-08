@@ -14,7 +14,7 @@ public class BBTiers {
 
     static {
         BUBBLE_BLOWER = new BlueprintArmorMaterial(new ResourceLocation(
-                "bubble_boots", "bubble_blower"), 0, new int[]{0, 0, 0, 0}, 0,
+                "bubble_boots", "bubble_blower"), 0, new int[]{1, 0, 0, 0}, 0,
                 ModSounds.BUBBLE_POP, 0.0F, 0.0F, () -> {
             return Ingredient.of(new ItemLike[]{(ItemLike) ModRegistry.SOAP.get()});
         });

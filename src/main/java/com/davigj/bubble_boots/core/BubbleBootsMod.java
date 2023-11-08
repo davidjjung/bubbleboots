@@ -11,12 +11,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(BBMod.MOD_ID)
-public class BBMod {
+@Mod(BubbleBootsMod.MOD_ID)
+public class BubbleBootsMod {
     public static final String MOD_ID = "bubble_boots";
     public static final RegistryHelper REGISTRY_HELPER = new RegistryHelper(MOD_ID);
 
-    public BBMod() {
+    public BubbleBootsMod() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModLoadingContext context = ModLoadingContext.get();
         MinecraftForge.EVENT_BUS.register(this);
