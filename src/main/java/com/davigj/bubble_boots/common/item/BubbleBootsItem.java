@@ -45,7 +45,7 @@ public class BubbleBootsItem extends ArmorItem {
                     }
                 } else {
                     if (tickCount % 2 == 0 && soapiness == soapWarning) {
-                        world.playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
+                        world.playSound(player, player.blockPosition(), BBSounds.BUBBLES.get(),
                                 SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
                 }
