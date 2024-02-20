@@ -3,7 +3,6 @@ package com.davigj.bubble_boots.core.mixin;
 import com.davigj.bubble_boots.core.registry.BBItems;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BubbleBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
