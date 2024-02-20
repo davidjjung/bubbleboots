@@ -45,9 +45,9 @@ public class BBEvents {
                     if (!player.getAbilities().instabuild) {
                         handStack.shrink(1);
                     }
-                    player.level.playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
+                    player.level().playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
                             SoundSource.PLAYERS, 1.0F, 1.0F);
-                    if (player.level.isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
+                    if (player.level().isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
                         RandomSource rand = player.getRandom();
                         for (int i = 0; i < 8; i++) {
                             double x = player.getX() - 0.5;
@@ -55,7 +55,7 @@ public class BBEvents {
                             double z = player.getZ() - 0.5;
                             double d3 = (float) x + rand.nextFloat();
                             double d6 = (float) z + rand.nextFloat();
-                            player.level.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+                            player.level().addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
                         }
                     }
                 }
@@ -66,8 +66,8 @@ public class BBEvents {
     @SubscribeEvent
     public static void villagerTrades(VillagerTradesEvent event) {
         if (BBConfig.COMMON.armorerTrade.get()) {
-            TradeUtil.addVillagerTrades(event, VillagerProfession.ARMORER, TradeUtil.EXPERT, new TradeUtil.BlueprintTrade(
-                    new ItemStack(ModRegistry.SOAP_BLOCK.get(), 2), new ItemStack(Items.EMERALD, 23),
+            TradeUtil.addVillagerTrades(event, VillagerProfession.ARMORER, TradeUtil.MASTER, new TradeUtil.BlueprintTrade(
+                    new ItemStack(ModRegistry.SOAP_BLOCK.get(), 2), new ItemStack(Items.EMERALD, 26),
                     new ItemStack(BBItems.BUBBLE_BOOTS.get(), 1), 3, 20, 5
             ));
         }
@@ -81,7 +81,7 @@ public class BBEvents {
         } else if (entity.tickCount % 20 == 0 && entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof BubbleBootsItem) {
             ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
             int soapiness = stack.getOrCreateTag().getInt(SOAPINESS);
-            if (entity.level.isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
+            if (entity.level().isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
                 if (soapiness > 0) {
                     RandomSource rand = entity.getRandom();
                     double x = entity.getX() - 0.5;
@@ -89,11 +89,11 @@ public class BBEvents {
                     double z = entity.getZ() - 0.5;
                     double d3 = (float) x + rand.nextFloat();
                     double d6 = (float) z + rand.nextFloat();
-                    entity.level.addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+                    entity.level().addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
                 }
             }
             if (BBConfig.COMMON.slipAndSlide.get() && soapiness > 0) {
-                ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(entity.level, entity.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), entity);
+                ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(entity.level(), entity.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), entity);
             }
         }
     }
