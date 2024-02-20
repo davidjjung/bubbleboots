@@ -1,9 +1,12 @@
 package com.davigj.bubble_boots.core;
 
+import com.davigj.bubble_boots.core.registry.BBItems;
 import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -22,6 +25,8 @@ public class BubbleBootsMod {
         MinecraftForge.EVENT_BUS.register(this);
 
 		REGISTRY_HELPER.register(bus);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> BBItems::buildCreativeTabContents);
 
         bus.addListener(this::commonSetup);
         bus.addListener(this::clientSetup);
