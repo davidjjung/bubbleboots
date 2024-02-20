@@ -5,7 +5,6 @@ import com.davigj.bubble_boots.core.registry.BBSounds;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -37,7 +36,7 @@ public class BubbleBootsItem extends ArmorItem {
         if (soapiness > 0) {
             int tickCount = player.tickCount;
             int soapWarning = BBConfig.CLIENT.soapWarning.get();
-            if (world.getBlockState(bubblePos).isAir()) {
+            if (world.getBlockState(bubblePos).isAir() && !player.isCrouching()) {
                 if (!world.isClientSide) {
                     world.setBlockAndUpdate(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
                     if (tickCount % 2 == 0) {
@@ -49,10 +48,6 @@ public class BubbleBootsItem extends ArmorItem {
                                 SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
                 }
-            } else if (BBConfig.COMMON.soapBlockRestoration.get() &&
-                    world.getBlockState(bubblePos).is(ModRegistry.SOAP_BLOCK.get()) && soapiness != MAX_SOAPINESS) {
-                world.playSound(player, player, ModSounds.BUBBLE_BLOW.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
-                this.setDefaultSoapiness(stack);
             } else if (player.isInWaterRainOrBubble() && BBConfig.COMMON.bootCleaning.get()) {
                 tag.putInt(SOAPINESS, 0);
                 return;
@@ -86,7 +81,7 @@ public class BubbleBootsItem extends ArmorItem {
         return 15246564;
     }
 
-    private void setDefaultSoapiness(ItemStack stack) {
+    public void setDefaultSoapiness(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt(SOAPINESS, MAX_SOAPINESS);
     }

@@ -66,8 +66,8 @@ public class BBEvents {
     @SubscribeEvent
     public static void villagerTrades(VillagerTradesEvent event) {
         if (BBConfig.COMMON.armorerTrade.get()) {
-            TradeUtil.addVillagerTrades(event, VillagerProfession.ARMORER, TradeUtil.EXPERT, new TradeUtil.BlueprintTrade(
-                    new ItemStack(ModRegistry.SOAP_BLOCK.get(), 2), new ItemStack(Items.EMERALD, 23),
+            TradeUtil.addVillagerTrades(event, VillagerProfession.ARMORER, TradeUtil.MASTER, new TradeUtil.BlueprintTrade(
+                    new ItemStack(ModRegistry.SOAP_BLOCK.get(), 2), new ItemStack(Items.EMERALD, 26),
                     new ItemStack(BBItems.BUBBLE_BOOTS.get(), 1), 3, 20, 5
             ));
         }

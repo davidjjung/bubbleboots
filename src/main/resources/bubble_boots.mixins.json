@@ -5,6 +5,8 @@
   "minVersion": "0.8",
   "refmap": "bubble_boots.refmap.json",
   "mixins": [
+    "BubbleBlockMixin",
+    "SoapBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
