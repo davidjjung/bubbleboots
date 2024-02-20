@@ -5,14 +5,12 @@ import com.davigj.bubble_boots.core.registry.BBSounds;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -26,8 +24,8 @@ import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 public class BubbleBootsItem extends ArmorItem {
     public static final String SOAPINESS = "Soapiness";
 
-    public BubbleBootsItem(ArmorMaterial materialIn, EquipmentSlot slot, Item.Properties builder) {
-        super(materialIn, slot, builder);
+    public BubbleBootsItem(ArmorMaterial materialIn, Item.Properties builder) {
+        super(materialIn, Type.BOOTS, builder);
     }
 
     public void onArmorTick(ItemStack stack, Level world, Player player) {
@@ -37,22 +35,18 @@ public class BubbleBootsItem extends ArmorItem {
         if (soapiness > 0) {
             int tickCount = player.tickCount;
             int soapWarning = BBConfig.CLIENT.soapWarning.get();
-            if (world.getBlockState(bubblePos).isAir()) {
+            if (world.getBlockState(bubblePos).isAir() && !player.isCrouching()) {
                 if (!world.isClientSide) {
-                    world.setBlockAndUpdate(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState());
+                    world.setBlock(bubblePos, ModRegistry.BUBBLE_BLOCK.get().defaultBlockState(), 3);
                     if (tickCount % 2 == 0) {
                         tag.putInt(SOAPINESS, soapiness - 1);
                     }
                 } else {
                     if (tickCount % 2 == 0 && soapiness == soapWarning) {
                         world.playSound(player, player.blockPosition(), BBSounds.BUBBLES.get(),
-                                SoundSource.PLAYERS, 1.0F, 1.0F);
+                                SoundSource.PLAYERS, 0.5F, (float) (0.75F + (0.25 * player.getRandom().nextFloat())));
                     }
                 }
-            } else if (BBConfig.COMMON.soapBlockRestoration.get() &&
-                    world.getBlockState(bubblePos).is(ModRegistry.SOAP_BLOCK.get()) && soapiness != MAX_SOAPINESS) {
-                world.playSound(player, player, ModSounds.BUBBLE_BLOW.get(), SoundSource.NEUTRAL, 1.0F, 1.0F);
-                this.setDefaultSoapiness(stack);
             } else if (player.isInWaterRainOrBubble() && BBConfig.COMMON.bootCleaning.get()) {
                 tag.putInt(SOAPINESS, 0);
                 return;
@@ -86,7 +80,7 @@ public class BubbleBootsItem extends ArmorItem {
         return 15246564;
     }
 
-    private void setDefaultSoapiness(ItemStack stack) {
+    public void setDefaultSoapiness(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt(SOAPINESS, MAX_SOAPINESS);
     }
