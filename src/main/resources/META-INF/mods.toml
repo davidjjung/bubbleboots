@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[32,)"
+loaderVersion = "[47,)"
 issueTrackerURL = "https://github.com/davidjjung/bubbleboots/issues"
 license = "MIT License"
 
@@ -20,34 +20,34 @@ description = '''
 [[dependencies.bubble_boots]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,1.19.3)"
+versionRange = "[1.20.1,1.21)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.bubble_boots]]
 modId = "forge"
 mandatory = true
-versionRange = "[43.3.0,)"
+versionRange = "[47.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.bubble_boots]]
 modId = "blueprint"
 mandatory = true
-versionRange = "[6.2.0,)"
+versionRange = "[7.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.bubble_boots]]
 modId = "moonlight"
 mandatory = true
-versionRange = "[1.19.2-2.3.4,)"
+versionRange = "[1.20-2.9.16,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.bubble_boots]]
 modId = "supplementaries"
 mandatory = true
-versionRange = "[1.19.2-2.4.5,)"
+versionRange = "[1.20-2.7.36,)"
 ordering = "AFTER"
 side = "BOTH"
