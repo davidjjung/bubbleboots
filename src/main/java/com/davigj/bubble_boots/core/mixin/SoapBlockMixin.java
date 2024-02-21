@@ -3,7 +3,6 @@ package com.davigj.bubble_boots.core.mixin;
 import com.davigj.bubble_boots.common.item.BubbleBootsItem;
 import com.davigj.bubble_boots.core.BBConfig;
 import com.davigj.bubble_boots.core.registry.BBItems;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -23,13 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static com.davigj.bubble_boots.common.item.BubbleBootsItem.SOAPINESS;
 import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 
-@Mixin(SoapBlock.class)
+@Mixin(targets = "net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock")
 public class SoapBlockMixin extends Block {
     public SoapBlockMixin(Properties p_49795_) {
         super(p_49795_);
     }
 
-    @Inject(method = "stepOn", at = @At("HEAD"), remap = false)
+    @Inject(method = "stepOn", at = @At("HEAD"))
     private void reSoap(Level level, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
         if (BBConfig.COMMON.soapBlockRestoration.get() && entity instanceof LivingEntity living) {
             ItemStack stack = living.getItemBySlot(EquipmentSlot.FEET);
