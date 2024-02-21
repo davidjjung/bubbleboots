@@ -20,14 +20,14 @@ public class BubbleBlockMixin extends Block {
         super(p_49795_);
     }
 
-    @Inject(method = "stepOn", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "stepOn", at = @At("HEAD"), cancellable = true)
     private void stopThePop(Level level, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
         if (entity instanceof Player player && player.getItemBySlot(EquipmentSlot.FEET).is(BBItems.BUBBLE_BOOTS.get())) {
             super.stepOn(level, pos, state, entity);
             ci.cancel();
         }
     }
-    @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true)
     private void stopThePopTheSqueakquel(Level level, BlockState state, BlockPos pos, Entity entity, float v, CallbackInfo ci) {
         if (!level.isClientSide && entity instanceof Player player && player.getItemBySlot(EquipmentSlot.FEET).is(BBItems.BUBBLE_BOOTS.get()) && v < 2.0F) {
             super.fallOn(level, state, pos, entity, v);

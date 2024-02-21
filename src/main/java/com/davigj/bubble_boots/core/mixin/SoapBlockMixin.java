@@ -29,7 +29,7 @@ public class SoapBlockMixin extends Block {
         super(p_49795_);
     }
 
-    @Inject(method = "stepOn", at = @At("HEAD"), remap = false)
+    @Inject(method = "stepOn", at = @At("HEAD"))
     private void reSoap(Level level, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
         if (BBConfig.COMMON.soapBlockRestoration.get() && entity instanceof LivingEntity living) {
             ItemStack stack = living.getItemBySlot(EquipmentSlot.FEET);
