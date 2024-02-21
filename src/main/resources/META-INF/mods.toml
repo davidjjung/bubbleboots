@@ -41,13 +41,13 @@ side = "BOTH"
 [[dependencies.bubble_boots]]
 modId = "moonlight"
 mandatory = true
-versionRange = "[1.19.2-2.3.4,)"
+versionRange = "[1.19.2-2.3.5,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.bubble_boots]]
 modId = "supplementaries"
 mandatory = true
-versionRange = "[1.19.2-2.4.5,)"
+versionRange = "[1.19.2-2.4.20,)"
 ordering = "AFTER"
 side = "BOTH"
