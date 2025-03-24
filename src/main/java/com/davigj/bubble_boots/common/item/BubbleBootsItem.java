@@ -44,7 +44,7 @@ public class BubbleBootsItem extends ArmorItem {
                 } else {
                     if (tickCount % 2 == 0 && soapiness == soapWarning) {
                         world.playSound(player, player.blockPosition(), BBSounds.BUBBLES.get(),
-                                SoundSource.PLAYERS, 0.5F, (float) (0.75F + (0.25 * player.getRandom().nextFloat())));
+                                SoundSource.PLAYERS, 0.5F, (float) (0.9F + (0.25 * player.getRandom().nextGaussian())));
                     }
                 }
             } else if (player.isInWaterRainOrBubble() && BBConfig.COMMON.bootCleaning.get()) {

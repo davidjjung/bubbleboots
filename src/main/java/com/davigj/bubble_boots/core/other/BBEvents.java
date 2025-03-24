@@ -34,7 +34,7 @@ public class BBEvents {
     public static void playerUse(PlayerInteractEvent.RightClickItem event) {
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof SoapItem) {
+        if (stack.is(BBItemTags.BUBBLE_RESTORERS)) {
             ItemStack armorStack = player.getItemBySlot(EquipmentSlot.FEET);
             if (armorStack.getItem() instanceof BubbleBootsItem) {
                 int soapiness = armorStack.getOrCreateTag().getInt(SOAPINESS);
@@ -46,7 +46,7 @@ public class BBEvents {
                         handStack.shrink(1);
                     }
                     player.level().playSound((Player) player, player.blockPosition(), BBSounds.BUBBLES.get(),
-                            SoundSource.PLAYERS, 1.0F, 1.0F);
+                            SoundSource.PLAYERS, 1.0F, 1.0F + (float)(0.3 * player.getRandom().nextFloat()));
                     if (player.level().isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
                         RandomSource rand = player.getRandom();
                         for (int i = 0; i < 8; i++) {
