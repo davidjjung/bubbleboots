@@ -1,18 +1,18 @@
 package com.davigj.bubble_boots.core;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class BBConfig {
     public static class Common {
-        public final ForgeConfigSpec.ConfigValue<Integer> maxSoapiness;
-        public final ForgeConfigSpec.ConfigValue<Integer> soapRestoreAmt;
-        public final ForgeConfigSpec.ConfigValue<Boolean> soapBlockRestoration;
-        public final ForgeConfigSpec.ConfigValue<Boolean> bootCleaning;
-        public final ForgeConfigSpec.ConfigValue<Boolean> armorerTrade;
-        public final ForgeConfigSpec.ConfigValue<Boolean> slipAndSlide;
+        public final ModConfigSpec.ConfigValue<Integer> maxSoapiness;
+        public final ModConfigSpec.ConfigValue<Integer> soapRestoreAmt;
+        public final ModConfigSpec.ConfigValue<Boolean> soapBlockRestoration;
+        public final ModConfigSpec.ConfigValue<Boolean> bootCleaning;
+        public final ModConfigSpec.ConfigValue<Boolean> armorerTrade;
+        public final ModConfigSpec.ConfigValue<Boolean> slipAndSlide;
 
-        Common(ForgeConfigSpec.Builder builder) {
+        Common(ModConfigSpec.Builder builder) {
             builder.push("items");
             builder.push("bubble_boots");
             maxSoapiness = builder.comment("# of bubble blocks that boots may produce before needing a recharge").define("Maximum soapiness", 75);
@@ -30,10 +30,10 @@ public class BBConfig {
     }
 
     public static class Client {
-        public final ForgeConfigSpec.ConfigValue<Boolean> sudsyBoots;
-        public final ForgeConfigSpec.ConfigValue<Integer> soapWarning;
+        public final ModConfigSpec.ConfigValue<Boolean> sudsyBoots;
+        public final ModConfigSpec.ConfigValue<Integer> soapWarning;
 
-        public Client(ForgeConfigSpec.Builder builder) {
+        public Client(ModConfigSpec.Builder builder) {
             builder.push("particles");
             sudsyBoots = builder.comment("Do bubble boots emit sudsy particles while soapy").define("Sudsy boots", true);
             soapWarning = builder.comment("Boots with soapiness below this number start emitting more suds particles. Set to 0 for no warning threshold")
@@ -42,18 +42,18 @@ public class BBConfig {
         }
     }
 
-    static final ForgeConfigSpec COMMON_SPEC;
+    static final ModConfigSpec COMMON_SPEC;
     public static final BBConfig.Common COMMON;
 
-    public static final ForgeConfigSpec CLIENT_SPEC;
+    public static final ModConfigSpec CLIENT_SPEC;
     public static final Client CLIENT;
 
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(BBConfig.Common::new);
+        final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(BBConfig.Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
-        Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        Pair<Client, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = clientSpecPair.getRight();
         CLIENT = clientSpecPair.getLeft();
     }

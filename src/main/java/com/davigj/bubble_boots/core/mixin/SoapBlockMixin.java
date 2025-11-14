@@ -6,7 +6,6 @@ import com.davigj.bubble_boots.core.registry.BBItems;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -20,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.davigj.bubble_boots.common.item.BubbleBootsItem.SOAPINESS;
 import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 
 @Mixin(SoapBlock.class)
@@ -34,11 +32,10 @@ public class SoapBlockMixin extends Block {
         if (BBConfig.COMMON.soapBlockRestoration.get() && entity instanceof LivingEntity living) {
             ItemStack stack = living.getItemBySlot(EquipmentSlot.FEET);
             if (stack.is(BBItems.BUBBLE_BOOTS.get())) {
-                CompoundTag tag = stack.getOrCreateTag();
-                int soapiness = tag.getInt(SOAPINESS);
+                int soapiness = stack.getDamageValue();
                 if (soapiness != MAX_SOAPINESS) {
                     level.playSound(entity, pos, ModSounds.BUBBLE_BLOW.get(), SoundSource.NEUTRAL, 0.8F, 1.0F);
-                    ((BubbleBootsItem)(stack.getItem())).setDefaultSoapiness(stack);
+                    ((BubbleBootsItem)(stack.getItem())).setDamage(stack, MAX_SOAPINESS);
                 }
             }
         }

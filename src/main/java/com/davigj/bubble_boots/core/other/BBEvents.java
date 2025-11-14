@@ -2,12 +2,11 @@ package com.davigj.bubble_boots.core.other;
 
 import com.davigj.bubble_boots.common.item.BubbleBootsItem;
 import com.davigj.bubble_boots.core.BBConfig;
-import com.davigj.bubble_boots.core.BubbleBootsMod;
+import com.davigj.bubble_boots.core.BubbleBoots;
 import com.davigj.bubble_boots.core.registry.BBItems;
 import com.davigj.bubble_boots.core.registry.BBSounds;
 import com.teamabnormals.blueprint.core.util.TradeUtil;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.sounds.SoundSource;
@@ -18,16 +17,15 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 
-import static com.davigj.bubble_boots.common.item.BubbleBootsItem.SOAPINESS;
 import static com.davigj.bubble_boots.common.util.Constants.MAX_SOAPINESS;
 
-@Mod.EventBusSubscriber(modid = BubbleBootsMod.MOD_ID)
+@EventBusSubscriber(modid = BubbleBoots.MOD_ID)
 public class BBEvents {
 
     @SubscribeEvent
@@ -37,9 +35,9 @@ public class BBEvents {
         if (stack.is(BBItemTags.BUBBLE_RESTORERS)) {
             ItemStack armorStack = player.getItemBySlot(EquipmentSlot.FEET);
             if (armorStack.getItem() instanceof BubbleBootsItem) {
-                int soapiness = armorStack.getOrCreateTag().getInt(SOAPINESS);
+                int soapiness = armorStack.getDamageValue();
                 if (soapiness < MAX_SOAPINESS) {
-                    armorStack.getOrCreateTag().putInt("Soapiness", Math.min(MAX_SOAPINESS, soapiness + BBConfig.COMMON.soapRestoreAmt.get()));
+                    armorStack.setDamageValue(Math.min(MAX_SOAPINESS, soapiness + BBConfig.COMMON.soapRestoreAmt.get()));
                     ItemStack handStack = player.getItemInHand(event.getHand());
                     player.swing(event.getHand());
                     if (!player.getAbilities().instabuild) {
@@ -67,33 +65,34 @@ public class BBEvents {
     public static void villagerTrades(VillagerTradesEvent event) {
         if (BBConfig.COMMON.armorerTrade.get()) {
             TradeUtil.addVillagerTrades(event, VillagerProfession.ARMORER, TradeUtil.MASTER, new TradeUtil.BlueprintTrade(
-                    new ItemStack(ModRegistry.SOAP_BLOCK.get(), 2), new ItemStack(Items.EMERALD, 26),
+                    new ItemStack(ModRegistry.SOAP_BLOCK.get().asItem(), 2), new ItemStack(Items.EMERALD, 26),
                     new ItemStack(BBItems.BUBBLE_BOOTS.get(), 1), 3, 20, 5
             ));
         }
     }
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
-        if (entity instanceof Player) {
-            return;
-        } else if (entity.tickCount % 20 == 0 && entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof BubbleBootsItem) {
-            ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
-            int soapiness = stack.getOrCreateTag().getInt(SOAPINESS);
-            if (entity.level().isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
-                if (soapiness > 0) {
-                    RandomSource rand = entity.getRandom();
-                    double x = entity.getX() - 0.5;
-                    double y = entity.getY();
-                    double z = entity.getZ() - 0.5;
-                    double d3 = (float) x + rand.nextFloat();
-                    double d6 = (float) z + rand.nextFloat();
-                    entity.level().addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+    public static void onLivingTick(EntityTickEvent.Post event) {
+        if (event.getEntity() instanceof LivingEntity entity) {
+            if (entity instanceof Player) {
+                return;
+            } else if (entity.tickCount % 20 == 0 && entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof BubbleBootsItem) {
+                ItemStack stack = entity.getItemBySlot(EquipmentSlot.FEET);
+                int soapiness = stack.getDamageValue();
+                if (entity.level().isClientSide && BBConfig.CLIENT.sudsyBoots.get()) {
+                    if (soapiness > 0) {
+                        RandomSource rand = entity.getRandom();
+                        double x = entity.getX() - 0.5;
+                        double y = entity.getY();
+                        double z = entity.getZ() - 0.5;
+                        double d3 = (float) x + rand.nextFloat();
+                        double d6 = (float) z + rand.nextFloat();
+                        entity.level().addParticle(ModParticles.SUDS_PARTICLE.get(), d3, y + 0.025, d6, 0, 0, 0);
+                    }
                 }
-            }
-            if (BBConfig.COMMON.slipAndSlide.get() && soapiness > 0) {
-                ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(entity.level(), entity.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), entity);
+                if (BBConfig.COMMON.slipAndSlide.get() && soapiness > 0) {
+                    ((SoapBlock) ModRegistry.SOAP_BLOCK.get()).stepOn(entity.level(), entity.getOnPos(), ModRegistry.SOAP_BLOCK.get().defaultBlockState(), entity);
+                }
             }
         }
     }
